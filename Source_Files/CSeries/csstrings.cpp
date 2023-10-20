@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <regex>
 
 #include "csstrings.h"
 #include "cspaths.h"
@@ -46,7 +47,6 @@
 #include "Scenario.h"
 
 #include <map>
-#include <boost/algorithm/string/replace.hpp>
 
 #ifdef __WIN32__
 #define WIN32_LEAN_AND_MEAN
@@ -376,24 +376,17 @@ std::string wide_to_utf8(const std::wstring& utf16) { return wide_to_utf8(utf16.
 /*
  *  Substitute special variables like application name or version
  */
-void expand_app_variables_inplace(std::string& str)
+std::string expand_app_variables(std::string& str)
 {
-	boost::replace_all(str, "$appName$", get_application_name());
-	boost::replace_all(str, "$appVersion$", A1_DISPLAY_VERSION);
-	boost::replace_all(str, "$appLongVersion$", A1_VERSION_STRING);
-	boost::replace_all(str, "$appDate$", A1_DISPLAY_DATE_VERSION);
-	boost::replace_all(str, "$appPlatform$", A1_DISPLAY_PLATFORM);
-	boost::replace_all(str, "$appURL$", A1_HOMEPAGE_URL);
-	boost::replace_all(str, "$appLogFile$", loggingFileName());
-	boost::replace_all(str, "$scenarioName$", Scenario::instance()->GetName());
-	boost::replace_all(str, "$scenarioVersion$", Scenario::instance()->GetVersion());
-}
-
-std::string expand_app_variables(const std::string& input)
-{
-	std::string output = input;
-	expand_app_variables_inplace(output);
-	return output;
+	std::string result = std::regex_replace(str, std::regex("\$appName\$"), get_application_name());
+	result = std::regex_replace(str, std::regex("\$appVersion\$"), A1_DISPLAY_VERSION);
+	result = std::regex_replace(str, std::regex("\$appLongVersion\$"), A1_VERSION_STRING);
+	result = std::regex_replace(str, std::regex("\$appDate\$"), A1_DISPLAY_DATE_VERSION);
+	result = std::regex_replace(str, std::regex("\$appPlatform\$"), A1_DISPLAY_PLATFORM);
+	result = std::regex_replace(str, std::regex("\$appURL\$"), A1_HOMEPAGE_URL);
+	result = std::regex_replace(str, std::regex("\$appLogFile\$"), loggingFileName());
+	result = std::regex_replace(str, std::regex("\$scenarioName\$"), Scenario::instance()->GetName());
+	return std::regex_replace(str, std::regex("\$scenarioVersion\$"), Scenario::instance()->GetVersion());
 }
 
 void expand_app_variables(char *dest, const char *src)
@@ -409,8 +402,8 @@ void expand_app_variables(char *dest, const char *src)
 		strstr(src, "$scenarioVersion$"))
 	{
 		std::string str(src);
-		expand_app_variables_inplace(str);
-		strcpy(dest, str.c_str());
+		auto new_str = expand_app_variables(str);
+		strcpy(dest, new_str.c_str());
 	}
 	else
 		strcpy(dest, src);

@@ -82,7 +82,6 @@ std::string wide_to_utf8(const std::wstring& utf16);
 
 // Substitute special variables like application name or version
 std::string expand_app_variables(const std::string& input);
-void expand_app_variables_inplace(std::string& str);
 void expand_app_variables(char *dest, const char *src);
 
 #endif
