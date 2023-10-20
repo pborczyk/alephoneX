@@ -40,10 +40,6 @@
          "platform":"windows"
       },
       {
-         "name":"glew",
-         "platform":"windows"
-      },
-      {
          "name":"zziplib"
       },
       {

@@ -163,7 +163,9 @@ Movie::Movie() :
   av(NULL),
   encodeThread(NULL),
   encodeReady(NULL),
+#ifdef HAVE_OPENGL
   frameBufferObject(nullptr),
+#endif
   fillReady(NULL),
   stillEncoding(0)
 {
@@ -296,12 +298,12 @@ bool Movie::Setup()
 
 	encodeThread = SDL_CreateThread(Movie_EncodeThread, "MovieSetup_encodeThread", this);
     if (!encodeThread) { ThrowUserError("Could not create movie encoding thread"); return false; }
-
+#ifdef HAVE_OPENGL
     if (MainScreenIsOpenGL())
     {
         frameBufferObject = std::unique_ptr<FBO>(new FBO(view_rect.w, view_rect.h));
     }
-
+#endif // HAVE_OPENGL
 	return av->inited = true;
 }
 

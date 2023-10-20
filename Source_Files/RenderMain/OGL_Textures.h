@@ -30,6 +30,7 @@ May 3, 2003 (Br'fin (Jeremy Parsons))
 	Added LowLevelShape workaround for passing LowLevelShape info of sprites
 	instead of abusing/overflowing shape_descriptors
 */
+#ifdef HAVE_OPENGL
 
 #ifndef _OGL_TEXTURES
 #define _OGL_TEXTURES
@@ -361,3 +362,4 @@ struct OGL_TexturesStats {
 extern OGL_TexturesStats gGLTxStats;
 
 #endif
+#endif // HAVE_OPENGL

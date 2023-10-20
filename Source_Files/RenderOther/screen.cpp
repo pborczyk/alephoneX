@@ -966,12 +966,17 @@ static void change_screen_mode(int width, int height, int depth, bool nogl, bool
 	if (main_screen != NULL && !nogl && screen_mode.acceleration == _opengl_acceleration)
 	{
 		// see if we can actually run shaders
+#ifdef HAVE_OPENGL
 		if (!context_created) {
 			SDL_GL_CreateContext(main_screen);
 			context_created = true;
 		}
+#endif
+
 #ifdef __WIN32__
+#ifdef HAVE_OPENGL
 		glewInit();
+#endif
 #endif
 		if (!OGL_CheckExtension("GL_ARB_vertex_shader") || !OGL_CheckExtension("GL_ARB_fragment_shader") || !OGL_CheckExtension("GL_ARB_shader_objects") || !OGL_CheckExtension("GL_ARB_shading_language_100"))
 		{

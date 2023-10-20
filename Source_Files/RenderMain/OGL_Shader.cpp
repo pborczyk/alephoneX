@@ -1,3 +1,5 @@
+#ifdef HAVE_OPENGL
+
 /*
  OGL_SHADER.CPP
  
@@ -557,3 +559,4 @@ void initDefaultPrograms() {
 		;
 }
 
+#endif //HAVE_OPENGL

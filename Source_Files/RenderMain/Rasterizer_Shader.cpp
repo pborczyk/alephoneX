@@ -5,6 +5,7 @@
  *
  *  http://www.gnu.org/licenses/gpl.html
  */
+#ifdef HAVE_OPENGL
 
 #include "OGL_Headers.h"
 
@@ -166,3 +167,4 @@ void Rasterizer_Shader_Class::End()
 	Rasterizer_OGL_Class::End();
 }
 
+#endif //HAVE_OPENGL

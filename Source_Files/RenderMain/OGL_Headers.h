@@ -1,3 +1,4 @@
+#ifdef HAVE_OPENGL
 #ifndef _OGL_HEADERS_
 #define _OGL_HEADERS_
 
@@ -45,3 +46,4 @@
 #endif
 
 #endif
+#endif //HAVE_OPENGL

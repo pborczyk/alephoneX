@@ -453,7 +453,7 @@ void OGL_UnloadModelsImages(short)
 
 #endif // def HAVE_OPENGL
 
-
+#ifdef HAVE_OPENGL
 OGL_FogData *OGL_GetFogData(int Type)
 {
 	return GetMemberWithBounds(FogData,Type,OGL_NUMBER_OF_FOG_TYPES);
@@ -529,6 +529,7 @@ void parse_mml_opengl(const InfoTree& root)
 		}
 	}
 }
+#endif
 
 #ifdef HAVE_OPENGL
 /* These don't belong here */

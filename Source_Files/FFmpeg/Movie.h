@@ -70,7 +70,9 @@ private:
   SDL_sem *encodeReady;
   SDL_sem *fillReady;
   bool stillEncoding;
+#ifdef HAVE_OPENGL
   std::unique_ptr<FBO> frameBufferObject;
+#endif // HAVE_OPENGL
   
   Movie();  
   bool Setup();

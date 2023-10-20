@@ -5,6 +5,9 @@
  *
  *  http://www.gnu.org/licenses/gpl.html
  */
+#ifdef HAVE_OPENGL
+
+
 
 #include "OGL_Headers.h"
 
@@ -1397,3 +1400,5 @@ void RenderRasterize_Shader::render_viewer_sprite(rectangle_definition& RenderRe
 	TMgr->RestoreTextureMatrix();
 
 }
+
+#endif // HAVE_OPENGL

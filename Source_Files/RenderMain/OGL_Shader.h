@@ -1,3 +1,6 @@
+#ifdef HAVE_OPENGL
+
+
 #ifndef _OGL_SHADER_
 #define _OGL_SHADER_
 /*
@@ -141,3 +144,4 @@ void parse_mml_opengl_shader(const InfoTree& root);
 void reset_mml_opengl_shader();
 
 #endif
+#endif // HAVE_OPENGL
