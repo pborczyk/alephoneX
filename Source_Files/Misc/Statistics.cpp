@@ -55,12 +55,14 @@ StatsManager::StatsManager() : thread_(0), run_(true), busy_(false)
 void StatsManager::Process()
 {
 	Entry entry;
+#ifdef HAVE_LUA
 	if (CollectLuaStats(entry.options, entry.parameters))
 	{
 		ScopedMutex mutex(entry_mutex_);
 		busy_ = true;
 		entries_.push(entry);
 	}
+#endif
 }
 
 void StatsManager::CheckForDone(dialog* d)

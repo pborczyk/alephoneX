@@ -892,11 +892,13 @@ static void handle_game_key(const SDL_Event &event)
 #endif
 				PlayInterfaceButtonSound(Sound_ButtonSuccess());
 			} 
+#ifdef HAVE_LUA
 			else if (Console::instance()->use_lua_console())
 			{
 				PlayInterfaceButtonSound(Sound_ButtonSuccess());
 				Console::instance()->activate_input(ExecuteLuaString, ">");
 			}
+#endif // HAVE_LUA
 			else
 			{
 				PlayInterfaceButtonSound(Sound_ButtonFailure());
