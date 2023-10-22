@@ -28,6 +28,8 @@ LUA_EPHEMERA.CPP
 #include "preferences.h"
 #include "render.h"
 
+#ifdef HAVE_LUA
+
 static uint16_t set_shape(uint16_t descriptor, uint16_t shape)
 {
 	descriptor &= ~(MAXIMUM_SHAPES_PER_COLLECTION - 1);
@@ -405,3 +407,4 @@ int Lua_Ephemera_register(lua_State* L)
 
 	return 0;
 }
+#endif //HAVE_LUA

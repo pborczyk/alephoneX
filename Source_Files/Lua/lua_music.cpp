@@ -1,6 +1,7 @@
 #include "lua_music.h"
 #include "Music.h"
 
+#ifdef HAVE_LUA
 static int Lua_MusicManager_Clear(lua_State* L)
 {
 	Music::instance()->ClearLevelMusic();
@@ -186,3 +187,4 @@ int Lua_Music_register(lua_State* L)
 	return 0;
 }
 
+#endif //HAVE_LUA

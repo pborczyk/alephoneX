@@ -811,9 +811,10 @@ bool join_networked_resume_game()
                 {
                         Plugins::instance()->set_mode(Plugins::kMode_Net);
                         Crosshairs_SetActive(player_preferences->crosshairs_active);
+#ifdef HAVE_LUA
                         LoadHUDLua();
                         RunLuaHUDScript();
-
+#endif // HAVE_LUA
                         // try to locate the Map file for the saved-game, so that (1) we have a crack
                         // at continuing the game if the original gatherer disappears, and (2) we can
                         // save the game on our own machine and continue it properly (as part of a bigger scenario) later.
@@ -823,7 +824,9 @@ bool join_networked_resume_game()
                                 // LP: getting the level scripting off of the map file
                                 // Being careful to carry over errors so that Pfhortran errors can be ignored
                                 short SavedType, SavedError = get_game_error(&SavedType);
+#ifdef HAVE_LUA
 								LoadStatsLua();
+#endif
                                 set_game_error(SavedType,SavedError);
                         }
                         else
@@ -837,8 +840,9 @@ bool join_networked_resume_game()
                         
                                 /* Set to the default map. */
                                 set_to_default_map();
-				
+#ifdef HAVE_LUA
 				LoadStatsLua();
+#endif
                         }
                         
                         // set the revert-game info to defaults (for full-auto saving on the local machine)
@@ -847,8 +851,9 @@ bool join_networked_resume_game()
                         player_start_data theStarts[MAXIMUM_NUMBER_OF_PLAYERS];
                         short theStartCount;
                         construct_multiplayer_starts(theStarts, &theStartCount);
-                        
+#ifdef HAVE_LUA
 			RunLuaScript();
+#endif
                         success = make_restored_game_relevant(true /* multiplayer */, theStarts, theStartCount);
                 }
         }
@@ -919,16 +924,19 @@ bool load_and_start_game(FileSpecifier& File)
 		if (success)
 		{
 			Crosshairs_SetActive(player_preferences->crosshairs_active);
+#ifdef HAVE_LUA
 			LoadHUDLua();
 			RunLuaHUDScript();
-			
+#endif
 			// load the scripts we put off before
 			short SavedType, SavedError = get_game_error(&SavedType);
+#ifdef HAVE_LUA
 			if(!userWantsMultiplayer)
 			{
 				LoadSoloLua();
 			}
 			LoadStatsLua();
+#endif
 			set_game_error(SavedType,SavedError);
 			
 			player_start_data theStarts[MAXIMUM_NUMBER_OF_PLAYERS];
@@ -976,7 +984,9 @@ bool load_and_start_game(FileSpecifier& File)
                         
 			if (success)
 			{
+#ifdef HAVE_LUA
 				RunLuaScript();
+#endif
 				success = make_restored_game_relevant(userWantsMultiplayer, theStarts, theNumberOfStarts);
 				if (success)
 				{
@@ -2214,9 +2224,10 @@ static bool begin_game(
 
 		Plugins::instance()->set_mode(number_of_players > 1 ? Plugins::kMode_Net : Plugins::kMode_Solo);
 		Crosshairs_SetActive(player_preferences->crosshairs_active);
+#ifdef HAVE_LUA
 		LoadHUDLua();
 		RunLuaHUDScript();
-		
+#endif
 		/* Begin the game! */
 		success= new_game(number_of_players, is_networked, &game_information, starts, &entry);
 		if(success)
@@ -2370,8 +2381,9 @@ static void finish_game(
 	show_cursor();
 
 	leaving_map();
+#ifdef HAVE_LUA
 	CloseLuaHUDScript();
-	
+#endif
 	// LP: stop playing the background music if it was present
 	Music::instance()->StopLevelMusic();
 	

@@ -3298,7 +3298,7 @@ int16 Lua_Annotations_Length() {
 
 char Lua_Fog_Color_Name[] = "fog_color";
 typedef L_Class<Lua_Fog_Color_Name> Lua_Fog_Color;
-
+#ifdef HAVE_OPENGL
 static int Lua_Fog_Color_Get_R(lua_State *L)
 {
 	lua_pushnumber(L, (float) (OGL_GetFogData(Lua_Fog_Color::Index(L, 1))->Color.red) / 65535);
@@ -3482,7 +3482,7 @@ const luaL_Reg Lua_Fog_Set[] = {
 	{"start", Lua_Fog_Set_Start},
 	{0, 0}
 };
-
+#endif //OPENGL
 
 char Lua_Level_Stash_Name[] = "LevelStash";
 typedef L_Class<Lua_Level_Stash_Name> Lua_Level_Stash;
@@ -3567,13 +3567,13 @@ static int Lua_Level_Get_Mission_Flag(lua_State *L)
 	lua_pushboolean(L, static_world->mission_flags & flag);
 	return 1;
 }
-
+#ifdef HAVE_OPENGL
 static int Lua_Level_Get_Fog(lua_State *L)
 {
 	Lua_Fog::Push(L, OGL_Fog_AboveLiquid);
 	return 1;
 }
-	
+#endif //HAVE_OPENGL
 static int Lua_Level_Get_Name(lua_State *L)
 {
 	lua_pushstring(L, static_world->level_name);
@@ -3603,18 +3603,22 @@ static int Lua_Level_Get_Stash(lua_State* L)
         return 1;
 }
 
+#ifdef HAVE_OPENGL
 static int Lua_Level_Get_Underwater_Fog(lua_State *L)
 {
 	Lua_Fog::Push(L, OGL_Fog_BelowLiquid);
 	return 1;
 }
 
+#endif //HAVE_OPENGL
 const luaL_Reg Lua_Level_Get[] = {
 	{"calculate_completion_state", L_TableFunction<Lua_Level_Calculate_Completion_State>},
 	{"completed", Lua_Level_Get_Completed},
 	{"extermination", Lua_Level_Get_Mission_Flag<_mission_extermination>},
 	{"exploration", Lua_Level_Get_Mission_Flag<_mission_exploration>},
+#ifdef HAVE_OPENGL
 	{"fog", Lua_Level_Get_Fog},
+#endif //HAVE_OPENGL
 	{"low_gravity", Lua_Level_Get_Environment_Flag<_environment_low_gravity>},
 	{"magnetic", Lua_Level_Get_Environment_Flag<_environment_magnetic>},
 	{"name", Lua_Level_Get_Name},
@@ -3625,7 +3629,9 @@ const luaL_Reg Lua_Level_Get[] = {
 	{"repair", Lua_Level_Get_Mission_Flag<_mission_repair>},
 	{"rescue", Lua_Level_Get_Mission_Flag<_mission_rescue>},
         {"stash", Lua_Level_Get_Stash},
+#ifdef HAVE_OPENGL
 	{"underwater_fog", Lua_Level_Get_Underwater_Fog},
+#endif //HAVE_OPENGL
 	{"vacuum", Lua_Level_Get_Environment_Flag<_environment_vacuum>},
 	{0, 0}
 };
@@ -3809,15 +3815,16 @@ int Lua_Map_register(lua_State *L)
 
 	Lua_Annotations::Register(L, Lua_Annotations_Methods);
 	Lua_Annotations::Length = Lua_Annotations_Length;
-
+#ifdef HAVE_OPENGL
 	Lua_Fog::Register(L, Lua_Fog_Get, Lua_Fog_Set);
-
+#endif
 	Lua_FogMode::Register(L, 0, 0, 0, Lua_FogMode_Mnemonics);
 	Lua_FogMode::Valid = Lua_FogMode::ValidRange(3);
 	Lua_FogModes::Register(L);
 	Lua_FogModes::Length = Lua_FogModes::ConstantLength(3);
-
+#ifdef HAVE_OPENGL
 	Lua_Fog_Color::Register(L, Lua_Fog_Color_Get, Lua_Fog_Color_Set);
+#endif
 
 	// register one Level userdatum globally
 	Lua_Level::Push(L, 0);

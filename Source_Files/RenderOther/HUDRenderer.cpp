@@ -52,9 +52,10 @@ extern bool shapes_file_is_m1();
 bool HUD_Class::update_everything(short time_elapsed)
 {
 	ForceUpdate = false;
-
+#ifdef HAVE_LUA
 	if (!LuaTexturePaletteSize())
 	{
+#endif
 		if (!shapes_file_is_m1())
 		{
 			update_motion_sensor(time_elapsed);
@@ -68,7 +69,10 @@ bool HUD_Class::update_everything(short time_elapsed)
 			if (dynamic_world->player_count > 1)
 				draw_message_area(time_elapsed);
 		}
+#ifdef HAVE_LUA
 	}
+#endif
+#ifdef HAVE_LUA
 	else
 	{
 		int size;
@@ -113,6 +117,7 @@ bool HUD_Class::update_everything(short time_elapsed)
 
 		ForceUpdate = true;
 	}
+#endif HAVE_LUA
 
 	return ForceUpdate;
 }

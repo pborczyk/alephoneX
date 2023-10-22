@@ -328,7 +328,11 @@ bool Screen::hud()
 
 bool Screen::lua_hud()
 {
+#ifdef HAVE_LUA
 	return screen_mode.hud && LuaHUDRunning();
+#else
+	return false;
+#endif
 }
 
 bool Screen::openGL()

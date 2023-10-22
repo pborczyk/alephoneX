@@ -614,8 +614,10 @@ void leaving_map(
 	mark_all_monster_collections(false);
 	mark_player_collections(false);
 	mark_map_collections(false);
+#ifdef HAVE_LUA
 	MarkLuaCollections(false);
     MarkLuaHUDCollections(false);
+#endif
 	L_Call_Cleanup ();
 
 	// don't send stats on film replay
@@ -626,9 +628,10 @@ void leaving_map(
 		// upload the stats!
 		StatsManager::instance()->Process();
 	}
-
+#ifdef HAVE_LUA
 	//Close and unload the Lua state
 	CloseLuaScript();
+#endif
 #if !defined(DISABLE_NETWORKING)
 	NetSetChatCallbacks(NULL);
 #endif // !defined(DISABLE_NETWORKING)
@@ -669,10 +672,10 @@ bool entering_map(bool restoring_saved)
 	mark_all_monster_collections(true);
 	mark_player_collections(true);
 	mark_map_collections(true);
-
+#ifdef HAVE_LUA
 	MarkLuaCollections(true);
 	MarkLuaHUDCollections(true);
-
+#endif
 	load_collections(true, get_screen_mode()->acceleration != _no_acceleration);
 
 	load_all_monster_sounds();

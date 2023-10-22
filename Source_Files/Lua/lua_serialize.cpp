@@ -25,6 +25,8 @@ LUA_SERIALIZE.CPP
 #include "Logging.h"
 
 #include "BStream.h"
+#ifdef HAVE_LUA
+
 
 const static int SAVED_REFERENCE_PSEUDOTYPE = -2;
 const uint16 kVersion = 1;
@@ -306,3 +308,4 @@ bool lua_restore(lua_State *L, std::streambuf* sb)
 	lua_remove(L, 1);
 	return true;
 }
+#endif // HAVE_LUA

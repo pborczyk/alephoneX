@@ -480,8 +480,9 @@ void ensure_HUD_buffer(void) {
 /*
  *  Draw HUD (to HUD surface)
  */
-
+#ifdef HAVE_LUA
 extern int LuaTexturePaletteSize();
+#endif // HAVE_LUA
 
 void draw_panels(void)
 {
@@ -503,9 +504,11 @@ void draw_panels(void)
 
 	if (!hud_pict_not_found) {
 		SDL_Rect dst_rect = {0, 320, 640, 160};
+#ifdef HAVE_LUA
 		if (!LuaTexturePaletteSize())
 			SDL_BlitSurface(static_hud_pict.get(), NULL, HUD_Buffer, &dst_rect);
 		else
+#endif // HAVE_LUA
 			SDL_FillRect(HUD_Buffer, &dst_rect, 0);
 	}
 

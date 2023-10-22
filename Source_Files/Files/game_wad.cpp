@@ -477,8 +477,9 @@ void set_saved_game_name_to_default()
 	revert_game_data.SavedGame.SetToSavedGamesDir();
 	revert_game_data.SavedGame += getcstr(temporary, strFILENAMES, filenameDEFAULT_SAVE_GAME);
 }
-
+#ifdef HAVE_LUA
 extern void ResetPassedLua();
+#endif
 
 bool new_game(
 	short number_of_players, 
@@ -493,9 +494,9 @@ bool new_game(
 	
 	short player_index, i;
 	bool success= true;
-
+#ifdef HAVE_LUA
 	ResetPassedLua();
-
+#endif
 	/* Make sure our code is synchronized.. */
 	assert(MAXIMUM_PLAYER_START_NAME_LENGTH==MAXIMUM_PLAYER_NAME_LENGTH);
 
@@ -750,12 +751,12 @@ bool get_entry_points(vector<entry_point> &vec, int32 type)
 
 	return success;
 }
-
+#ifdef HAVE_LUA
 extern void LoadSoloLua();
 extern void LoadReplayNetLua();
 extern void LoadStatsLua();
 extern bool RunLuaScript();
-
+#endif
 /* This is called when the game level is changed somehow */
 /* The only thing that has to be valid in the entry point is the level_index */
 
@@ -804,8 +805,10 @@ bool goto_level(
 	
 	if (success)
 	{
+
 		// Being careful to carry over errors so that Pfhortran errors can be ignored
 		short SavedType, SavedError = get_game_error(&SavedType);
+#ifdef HAVE_LUA
 		if (!game_is_networked && number_of_players == 1)
 		{
 			LoadSoloLua();
@@ -815,7 +818,7 @@ bool goto_level(
 			LoadReplayNetLua();
 		}
 		LoadStatsLua();
-
+#endif
 		set_game_error(SavedType,SavedError);
 		
 		if (!new_game)
@@ -829,8 +832,9 @@ bool goto_level(
 		// ghs: this runs very early now
 		// we want to be before place_initial_objects, and
 		// before MarkLuaCollections
+#ifdef HAVE_LUA
 		RunLuaScript();
-
+#endif
 		if (film_profile.early_object_initialization)
 		{
 			place_initial_objects();
@@ -1209,8 +1213,9 @@ void recalculate_redundant_map(
 bool load_game_from_file(FileSpecifier& File, bool run_scripts)
 {
 	bool success= false;
-
+#ifdef HAVE_LUA
 	ResetPassedLua();
+#endif // HAVE_LUA
 	ResetLevelScript();
 
 	/* Setup for a revert.. */
@@ -1252,11 +1257,13 @@ bool load_game_from_file(FileSpecifier& File, bool run_scripts)
 			// LP: getting the level scripting off of the map file
 			// Being careful to carry over errors so that Pfhortran errors can be ignored
 			short SavedType, SavedError = get_game_error(&SavedType);
+#ifdef HAVE_LUA
 			if (!game_is_networked)
 			{
 				LoadSoloLua();
 			}
 			LoadStatsLua();
+#endif
 			set_game_error(SavedType,SavedError);
 		}
 	}
@@ -1292,7 +1299,9 @@ bool revert_game(
 		successful= load_game_from_file(revert_game_data.SavedGame, true);
 		if (successful) 
 		{
+#ifdef HAVE_LUA
 			RunLuaScript();
+#endif
 			
 			// LP: added for loading the textures if one had died on another level;
 			// this gets around WZ's moving of this line into make_restored_game_relevant()
@@ -1558,9 +1567,9 @@ static void scan_and_add_platforms(
 	}
 }
 
-
+#ifdef HAVE_LUA
 extern void unpack_lua_states(uint8*, size_t);
-
+#endif
 /* Load a level from a wad-> mainly used by the net stuff. */
 bool process_map_wad(
 	struct wad_data *wad, 
@@ -1762,7 +1771,7 @@ bool process_map_wad(
 	/* Extract MMLS */
 	data= (uint8 *)extract_type_from_wad(wad, MMLS_TAG, &data_length);
 	SetMMLS(data, data_length);
-
+#ifdef HAVE_LUA
 	/* Extract LUAS */
 	data= (uint8 *)extract_type_from_wad(wad, LUAS_TAG, &data_length);
 	SetLUAS(data, data_length);
@@ -1770,6 +1779,7 @@ bool process_map_wad(
 	/* Extract saved Lua state */
 	data =(uint8 *)extract_type_from_wad(wad, LUA_STATE_TAG, &data_length);
 	unpack_lua_states(data, data_length);
+#endif // HAVE_LUA
 
 	// LP addition: load the physics-model chunks (all fixed-size)
 	bool PhysicsModelLoaded = false;
@@ -2251,9 +2261,10 @@ static uint8 *export_tag_to_global_array_and_size(
 	return array;
 }
 
+#ifdef HAVE_LUA
 extern size_t save_lua_states();
 extern void pack_lua_states(uint8*, size_t);
-		
+#endif // HAVE_LUA
 
 /* the sizes are the sizes to save in the file, be aware! */
 static uint8 *tag_to_global_array_and_size(
@@ -2380,9 +2391,11 @@ static uint8 *tag_to_global_array_and_size(
 	        case LUAS_TAG:
 			GetLUAS(count);
 			break;
+#ifdef HAVE_LUA
 		case LUA_STATE_TAG:
 			count= save_lua_states();
 			break;
+#endif // HAVE_LUA
 		default:
 			assert(false);
 			break;
@@ -2502,9 +2515,11 @@ static uint8 *tag_to_global_array_and_size(
 	        case LUAS_TAG:
 			memcpy(array, GetLUAS(count), count);
 			break;
+#ifdef HAVE_LUA
 		case LUA_STATE_TAG:
 			pack_lua_states(array, count);
 			break;
+#endif
 		default:
 			assert(false);
 			break;

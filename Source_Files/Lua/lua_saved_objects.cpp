@@ -29,7 +29,7 @@ LUA_SAVED_OBJECTS.CPP
 #include "lua_map.h"
 
 #include "SoundManagerEnums.h"
-
+#ifdef HAVE_LUA
 const float AngleConvert = 360/float(FULL_CIRCLE);
 
 map_object* get_map_object(short index) {
@@ -277,3 +277,4 @@ int Lua_Saved_Objects_register(lua_State* L)
 	
 	return 0;
 }
+#endif //HAVE_LUA

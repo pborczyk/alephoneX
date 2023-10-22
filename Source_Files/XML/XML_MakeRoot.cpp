@@ -81,7 +81,9 @@ void ResetAllMMLValues()
 	reset_mml_scenery();
 	reset_mml_landscapes();
 	reset_mml_texture_loading();
+#ifdef HAVE_OPENGL
 	reset_mml_opengl();
+#endif
 	reset_mml_software();
 	reset_mml_dynamic_limits();
 	reset_mml_player_name();
@@ -137,8 +139,10 @@ void _ParseAllMML(const InfoTree& fileroot)
 			parse_mml_landscapes(child);
 		for (const InfoTree &child : root.children_named("texture_loading"))
 			parse_mml_texture_loading(child);
+#ifdef HAVE_OPENGL
 		for (const InfoTree &child : root.children_named("opengl"))
 			parse_mml_opengl(child);
+#endif
 		for (const InfoTree &child : root.children_named("software"))
 			parse_mml_software(child);
 		for (const InfoTree &child : root.children_named("dynamic_limits"))
