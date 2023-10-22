@@ -376,17 +376,17 @@ std::string wide_to_utf8(const std::wstring& utf16) { return wide_to_utf8(utf16.
 /*
  *  Substitute special variables like application name or version
  */
-std::string expand_app_variables(std::string& str)
+std::string expand_app_variables(const std::string& input)
 {
-	std::string result = std::regex_replace(str, std::regex("\$appName\$"), get_application_name());
-	result = std::regex_replace(str, std::regex("\$appVersion\$"), A1_DISPLAY_VERSION);
-	result = std::regex_replace(str, std::regex("\$appLongVersion\$"), A1_VERSION_STRING);
-	result = std::regex_replace(str, std::regex("\$appDate\$"), A1_DISPLAY_DATE_VERSION);
-	result = std::regex_replace(str, std::regex("\$appPlatform\$"), A1_DISPLAY_PLATFORM);
-	result = std::regex_replace(str, std::regex("\$appURL\$"), A1_HOMEPAGE_URL);
-	result = std::regex_replace(str, std::regex("\$appLogFile\$"), loggingFileName());
-	result = std::regex_replace(str, std::regex("\$scenarioName\$"), Scenario::instance()->GetName());
-	return std::regex_replace(str, std::regex("\$scenarioVersion\$"), Scenario::instance()->GetVersion());
+	std::string result = std::regex_replace(input, std::regex("\$appName\$"), get_application_name());
+	result = std::regex_replace(result, std::regex("\$appVersion\$"), A1_DISPLAY_VERSION);
+	result = std::regex_replace(result, std::regex("\$appLongVersion\$"), A1_VERSION_STRING);
+	result = std::regex_replace(result, std::regex("\$appDate\$"), A1_DISPLAY_DATE_VERSION);
+	result = std::regex_replace(result, std::regex("\$appPlatform\$"), A1_DISPLAY_PLATFORM);
+	result = std::regex_replace(result, std::regex("\$appURL\$"), A1_HOMEPAGE_URL);
+	result = std::regex_replace(result, std::regex("\$appLogFile\$"), loggingFileName());
+	result = std::regex_replace(result, std::regex("\$scenarioName\$"), Scenario::instance()->GetName());
+	return std::regex_replace(result, std::regex("\$scenarioVersion\$"), Scenario::instance()->GetVersion());
 }
 
 void expand_app_variables(char *dest, const char *src)
