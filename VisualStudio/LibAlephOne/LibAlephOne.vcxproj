@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v142</PlatformToolset>
@@ -83,12 +83,12 @@
     <VcpkgInstalledDir>..\..\vcpkg\installed-x64-windows</VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseStatic>false</VcpkgUseStatic>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;HAVE_LUA;__WIN32__;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;__WIN32__;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -100,12 +100,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>
+      </ImportLibrary>
+      <AdditionalDependencies>dwmapi.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;HAVE_LUA;__WIN32__;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;__WIN32__;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Source_Files\;$(ProjectDir)..\..\Source_Files\XML;$(ProjectDir)..\..\Source_Files\TCPMess;$(ProjectDir)..\..\Source_Files\Sound;$(ProjectDir)..\..\Source_Files\RenderOther;$(ProjectDir)..\..\Source_Files\RenderMain;$(ProjectDir)..\..\Source_Files\Network\Metaserver;$(ProjectDir)..\..\Source_Files\Network;$(ProjectDir)..\..\Source_Files\ModelView;$(ProjectDir)..\..\Source_Files\Misc;$(ProjectDir)..\..\Source_Files\Lua;$(ProjectDir)..\..\Source_Files\Input;$(ProjectDir)..\..\Source_Files\GameWorld;$(ProjectDir)..\..\Source_Files\Files;$(ProjectDir)..\..\Source_Files\FFmpeg;$(ProjectDir)..\..\Source_Files\CSeries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -118,12 +121,15 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>
+      </ImportLibrary>
+      <AdditionalDependencies>dwmapi.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Source_Files\;$(ProjectDir)..\..\Source_Files\XML;$(ProjectDir)..\..\Source_Files\TCPMess;$(ProjectDir)..\..\Source_Files\Sound;$(ProjectDir)..\..\Source_Files\RenderOther;$(ProjectDir)..\..\Source_Files\RenderMain;$(ProjectDir)..\..\Source_Files\Network\Metaserver;$(ProjectDir)..\..\Source_Files\Network;$(ProjectDir)..\..\Source_Files\ModelView;$(ProjectDir)..\..\Source_Files\Misc;$(ProjectDir)..\..\Source_Files\Lua;$(ProjectDir)..\..\Source_Files\Input;$(ProjectDir)..\..\Source_Files\GameWorld;$(ProjectDir)..\..\Source_Files\Files;$(ProjectDir)..\..\Source_Files\FFmpeg;$(ProjectDir)..\..\Source_Files\CSeries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;HAVE_LUA;WIN64;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;WIN64;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -132,13 +138,16 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>
+      </ImportLibrary>
+      <AdditionalDependencies>dwmapi.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Source_Files\;$(ProjectDir)..\..\Source_Files\XML;$(ProjectDir)..\..\Source_Files\TCPMess;$(ProjectDir)..\..\Source_Files\Sound;$(ProjectDir)..\..\Source_Files\RenderOther;$(ProjectDir)..\..\Source_Files\RenderMain;$(ProjectDir)..\..\Source_Files\Network\Metaserver;$(ProjectDir)..\..\Source_Files\Network;$(ProjectDir)..\..\Source_Files\ModelView;$(ProjectDir)..\..\Source_Files\Misc;$(ProjectDir)..\..\Source_Files\Lua;$(ProjectDir)..\..\Source_Files\Input;$(ProjectDir)..\..\Source_Files\GameWorld;$(ProjectDir)..\..\Source_Files\Files;$(ProjectDir)..\..\Source_Files\FFmpeg;$(ProjectDir)..\..\Source_Files\CSeries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;HAVE_LUA;WIN64;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>HAVE_NFD;HAVE_MINIUPNPC;MINIUPNP_STATICLIB;CURL_STATICLIB;HAVE_SDL_IMAGE;HAVE_CURL;HAVE_PNG;HAVE_ZZIP;HAVE_FFMPEG;SDL;WIN32;WIN64;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -149,6 +158,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>
+      </ImportLibrary>
+      <AdditionalDependencies>dwmapi.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -587,11 +599,6 @@
     <ClInclude Include="..\..\Source_Files\XML\QuickSave.h" />
     <ClInclude Include="..\..\Source_Files\XML\XML_LevelScript.h" />
     <ClInclude Include="..\..\Source_Files\XML\XML_ParseTreeRoot.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lua\Lua.vcxproj">
-      <Project>{272161cb-f5df-4f91-9c2f-d08e23ff1fdc}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

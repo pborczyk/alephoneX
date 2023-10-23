@@ -152,9 +152,9 @@ void load_environment_from_preferences(void);
 // Implemented in the "screen" routines
 void screen_printf(const char *format, ...);
 
-void main_event_loop(void);
-void initialize_application(void);
-void shutdown_application(void);
-bool handle_open_document(const std::string& filename);
+__declspec(dllimport) void main_event_loop(void);
+__declspec(dllimport) void initialize_application(void);
+__declspec(dllimport) void shutdown_application(void);
+__declspec(dllimport) bool handle_open_document(const std::string& filename);
 
 #endif

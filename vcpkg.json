@@ -63,6 +63,9 @@
       },
       {
          "name":"catch2"
+      },
+	  {
+         "name":"winsock2"
       }
    ],
    "overrides":[
