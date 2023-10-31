@@ -12,12 +12,6 @@
          "name":"boost-property-tree"
       },
       {
-         "name":"boost-iostreams"
-      },
-      {
-         "name":"boost-filesystem"
-      },
-      {
          "name":"boost-lockfree"
       },
       {
@@ -28,9 +22,6 @@
          "features":[
             "libjpeg-turbo"
          ]
-      },
-      {
-         "name":"sdl2-net"
       },
       {
          "name":"sdl2-ttf"
@@ -50,28 +41,16 @@
          ]
       },
       {
-         "name":"miniupnpc"
-      },
-      {
-         "name":"nativefiledialog"
-      },
-      {
          "name":"libsndfile"
-      },
-      {
-         "name":"openal-soft"
       },
       {
          "name":"catch2"
       },
 	  {
          "name":"winsock2"
-      }
-   ],
-   "overrides":[
+      },
       {
-         "name":"ffmpeg",
-         "version":"5.0.2"
+         "name": "openal-soft"
       }
    ],
    "builtin-baseline":"2c356da17069ed4ce4d793d03a60bf87b3e5cf2a"
