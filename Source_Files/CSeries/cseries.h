@@ -31,7 +31,7 @@
 #define VERSION "unknown version"
 #endif
 
-#include <SDL2/SDL.h>
+#include <SDL2\SDL.h>
 #include <SDL2/SDL_endian.h>
 #include <time.h>
 #include <string>
