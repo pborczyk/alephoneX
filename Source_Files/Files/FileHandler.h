@@ -58,12 +58,9 @@ March 18, 2002 (Br'fin (Jeremy Parsons)):
 #include <errno.h>
 #include <string>
 #ifndef NO_STD_NAMESPACE
-using std::string;
-using std::vector;
-#endif
 
-#include <boost/iostreams/categories.hpp>
-#include <boost/iostreams/positioning.hpp>
+using namespace Windows::Storage;
+#endif
 
 // Returned by .GetError() for unknown errors
 constexpr int unknown_filesystem_error = -1;
@@ -108,10 +105,10 @@ private:
 class opened_file_device {
 public:
 	typedef char char_type;
-	typedef boost::iostreams::seekable_device_tag category;
+	//typedef boost::iostreams::seekable_device_tag category;
 	std::streamsize read(char* s, std::streamsize n);
 	std::streamsize write(const char* s, std::streamsize n);
-	std::streampos seek(boost::iostreams::stream_offset off, std::ios_base::seekdir way);
+	std::streampos seek(int off, std::ios_base::seekdir way);
 
 	opened_file_device(OpenedFile& f);
 

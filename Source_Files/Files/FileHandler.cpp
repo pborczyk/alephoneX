@@ -51,7 +51,7 @@
 #include <SDL2/SDL_endian.h>
 
 #ifdef HAVE_UNISTD_H
-#include <sys/stat.h>
+#include <boost::system/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 #endif
@@ -78,15 +78,12 @@
 #include "preferences.h"
 
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem.hpp>
 
 #ifdef HAVE_NFD
 #include "nfd.h"
 #endif
 
-namespace io = boost::iostreams;
-namespace sys = boost::system;
-namespace fs = boost::filesystem;
+using namespace Windows::Storage;
 
 // From shell_sdl.cpp
 extern vector<DirectorySpecifier> data_search_path;
@@ -101,18 +98,18 @@ constexpr int o_binary = O_BINARY;
 constexpr int o_binary = 0;
 #endif
 
-static int to_posix_code_or_unknown(sys::error_code ec)
+static int to_posix_code_or_unknown(boost::system::error_code ec)
 {
 	const auto cond = ec.default_error_condition();
-	return cond.category() == sys::generic_category() ? cond.value() : unknown_filesystem_error;
+	return cond.category() == boost::system::generic_category() ? cond.value() : unknown_filesystem_error;
 }
 
 #ifdef __WIN32__
-static fs::path utf8_to_path(const std::string& utf8) { return utf8_to_wide(utf8); }
-static std::string path_to_utf8(const fs::path& path) { return wide_to_utf8(path.native()); }
+static boost::filesystem::path utf8_to_path(const std::string& utf8) { return utf8_to_wide(utf8); }
+static std::string path_to_utf8(const boost::filesystem::path& path) { return wide_to_utf8(path.native()); }
 #else
-static fs::path utf8_to_path(const std::string& utf8) { return utf8; }
-static std::string path_to_utf8(const fs::path& path) { return path.native(); }
+static boost::filesystem::path utf8_to_path(const std::string& utf8) { return utf8; }
+static std::string path_to_utf8(const boost::filesystem::path& path) { return path.native(); }
 #endif
 
 // utf8_zzip_io(): a zzip I/O handler set with a UTF-8-compatible 'open' handler
@@ -122,13 +119,13 @@ static int win_zzip_open(const char* f, int o, ...) { return _wopen(utf8_to_wide
 
 static const zzip_plugin_io_handlers& utf8_zzip_io()
 {
-	static const zzip_plugin_io_handlers io = []
+	static const zzip_plugin_io_handlers boost::iostreams = []
 	{
-		zzip_plugin_io_handlers io = {zzip_get_default_io()->fd};
-		io.fd.open = &win_zzip_open;
-		return io;
+		zzip_plugin_io_handlers boost::iostreams = {zzip_get_default_io()->fd};
+		boost::iostreams.fd.open = &win_zzip_open;
+		return boost::iostreams;
 	}();
-	return io;
+	return boost::iostreams;
 }
 #else
 static const zzip_plugin_io_handlers& utf8_zzip_io() { return *zzip_get_default_io(); }
@@ -236,7 +233,7 @@ std::streamsize opened_file_device::write(const char* s, std::streamsize n)
 	return SDL_RWwrite(f.GetRWops(), s, 1, n);
 }
 
-std::streampos opened_file_device::seek(io::stream_offset off, std::ios_base::seekdir way)
+std::streampos opened_file_device::seek(int off, std::ios_base::seekdir way)
 {
 	std::streampos pos;
 
@@ -388,8 +385,10 @@ bool FileSpecifier::Create(Typecode Type)
 // Create directory
 bool FileSpecifier::CreateDirectory()
 {
-	sys::error_code ec;
-	const bool created_dir = fs::create_directory(utf8_to_path(name), ec);
+	
+	auto folder = StorageFolder::CreateFolderAsync(Platform::String(name.c_str()));
+	boost::system::error_code ec;
+	const bool created_dir = boost::filesystem::create_directory(utf8_to_path(name), ec);
 	err = ec.value() == 0 ? (created_dir ? 0 : EEXIST) : to_posix_code_or_unknown(ec);
 	return err == 0;
 }
@@ -516,8 +515,8 @@ bool FileSpecifier::Exists()
 
 bool FileSpecifier::IsDir()
 {
-	sys::error_code ec;
-	const bool is_dir = fs::is_directory(utf8_to_path(name), ec);
+	boost::system::error_code ec;
+	const bool is_dir = boost::filesystem::is_directory(utf8_to_path(name), ec);
 	err = to_posix_code_or_unknown(ec);
 	return err == 0 && is_dir;
 }
@@ -525,8 +524,8 @@ bool FileSpecifier::IsDir()
 // Get modification date
 TimeType FileSpecifier::GetDate()
 {
-	sys::error_code ec;
-	const auto mtime = fs::last_write_time(utf8_to_path(name), ec);
+	boost::system::error_code ec;
+	const auto mtime = boost::filesystem::last_write_time(utf8_to_path(name), ec);
 	err = to_posix_code_or_unknown(ec);
 	return err == 0 ? mtime : 0;
 }
@@ -699,16 +698,16 @@ bool FileSpecifier::GetFreeSpace(uint32 &FreeSpace)
 // Delete file
 bool FileSpecifier::Delete()
 {
-	sys::error_code ec;
-	const bool removed = fs::remove(utf8_to_path(name), ec);
+	boost::system::error_code ec;
+	const bool removed = boost::filesystem::remove(utf8_to_path(name), ec);
 	err = ec.value() == 0 ? (removed ? 0 : ENOENT) : to_posix_code_or_unknown(ec);
 	return err == 0;
 }
 
 bool FileSpecifier::Rename(const FileSpecifier& Destination)
 {
-	sys::error_code ec;
-	fs::rename(utf8_to_path(name), utf8_to_path(Destination.name), ec);
+	boost::system::error_code ec;
+	boost::filesystem::rename(utf8_to_path(name), utf8_to_path(Destination.name), ec);
 	err = to_posix_code_or_unknown(ec);
 	return err == 0;
 }
@@ -810,7 +809,7 @@ bool FileSpecifier::SetNameWithPath(const char* NameWithPath, const DirectorySpe
 
 void FileSpecifier::SetTempName(const FileSpecifier& other)
 {
-	name = other.name + fs::unique_path("%%%%%%").string();
+	name = other.name + boost::filesystem::unique_path("%%%%%%").string();
 }
 
 // Get last element of path
@@ -889,15 +888,15 @@ bool FileSpecifier::ReadDirectory(vector<dir_entry> &vec)
 {
 	vec.clear();
 	
-	sys::error_code ec;
-	for (fs::directory_iterator it(utf8_to_path(name), ec), end; it != end; it.increment(ec))
+	boost::system::error_code ec;
+	for (boost::filesystem::directory_iterator it(utf8_to_path(name), ec), end; it != end; it.increment(ec))
 	{
 		const auto& entry = *it;
-		sys::error_code ignored_ec;
+		boost::system::error_code ignored_ec;
 		const auto type = entry.status(ignored_ec).type();
-		const bool is_dir = type == fs::directory_file;
+		const bool is_dir = type == boost::filesystem::directory_file;
 		
-		if (!(is_dir || type == fs::regular_file))
+		if (!(is_dir || type == boost::filesystem::regular_file))
 			continue; // skip special or failed-to-stat files
 		
 		const auto basename = entry.path().filename();
@@ -905,7 +904,7 @@ bool FileSpecifier::ReadDirectory(vector<dir_entry> &vec)
 		if (!is_dir && basename.native()[0] == '.')
 			continue; // skip dot-prefixed regular files
 		
-		vec.emplace_back(path_to_utf8(basename), is_dir, fs::last_write_time(entry.path(), ignored_ec));
+		vec.emplace_back(path_to_utf8(basename), is_dir, boost::filesystem::last_write_time(entry.path(), ignored_ec));
 	} 
 	
 	err = to_posix_code_or_unknown(ec);
